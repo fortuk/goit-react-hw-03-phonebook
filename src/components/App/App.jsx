@@ -16,6 +16,25 @@ class App extends React.Component {
     filter: '',
   };
 
+  #localstorageKey = 'contacts';
+
+  componentDidMount() {
+    const contacts = localStorage.getItem(this.#localstorageKey);
+    const parsedContacts = JSON.parse(contacts);
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem(
+        this.#localstorageKey,
+        JSON.stringify(this.state.contacts),
+      );
+    }
+  }
+
   addContact = contact => {
     const duplicateContact = this.state.contacts.some(
       item => item.name.toLowerCase() === contact.name.toLowerCase(),
